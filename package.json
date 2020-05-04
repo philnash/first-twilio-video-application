@@ -12,5 +12,8 @@
   },
   "engines": {
     "node": "10.17.0"
+  },
+  "dependencies": {
+    "twilio": "^3.43.0"
   }
 }

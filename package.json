@@ -15,5 +15,6 @@
   },
   "dependencies": {
     "twilio": "^3.43.0"
-  }
+  },
+  "license": "MIT"
 }

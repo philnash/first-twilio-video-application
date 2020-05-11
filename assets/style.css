@@ -1,0 +1,138 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+::selection {
+  background: #f22f46;
+  color: white;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  color: #606b85;
+  background: #f4f4f6;
+  min-height: 100%;
+  justify-content: space-around;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  color: #001489;
+}
+
+main {
+  padding: 0 2em;
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+main p {
+  margin-bottom: 2em;
+}
+
+main #login {
+  margin: 0 auto;
+  max-width: 800px;
+}
+main #login[hidden] {
+  display: none;
+}
+#login h1 {
+  padding: 0 16px;
+  margin-bottom: 0.5em;
+}
+main form {
+  display: flex;
+  flex-direction: column;
+}
+main form .field {
+  flex-grow: 1;
+  padding: 0 1em;
+  display: flex;
+  flex-direction: column;
+}
+main form label {
+  align-self: center;
+  margin-bottom: 20px;
+  display: block;
+  width: 100%;
+}
+main form input {
+  font-size: 24px;
+  padding: 0.5em;
+  border: 1px solid #e1e3ea;
+  border-radius: 6px;
+  flex-grow: 1;
+  margin-bottom: 20px;
+}
+main form button {
+  background: #001489;
+  color: #fff;
+  border: 1px solid transparent;
+  font-size: 24px;
+  padding: 0.5em;
+  border-radius: 6px;
+  width: 100%;
+}
+@media screen and (min-width: 720px) {
+  main form .field,
+  main form {
+    flex-direction: row;
+  }
+  main form label {
+    margin-right: 20px;
+    margin-bottom: 0;
+    width: auto;
+  }
+
+  main form input {
+    margin-bottom: 0;
+  }
+}
+
+#chat {
+  flex-grow: 1;
+  padding: 2em 0;
+}
+
+#participants {
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+#participants > div {
+  position: relative;
+  height: 180px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  overflow: hidden;
+}
+#participants > div > video {
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+  margin: 0 auto;
+  border-radius: 6px;
+}
+
+footer {
+  margin: 0 auto;
+  text-align: center;
+  width: 100%;
+}
+
+footer p {
+  border-top: 1px solid #e1e3ea;
+  padding: 2em 0;
+  margin: 0 2em;
+}

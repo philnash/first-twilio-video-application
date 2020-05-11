@@ -34,6 +34,25 @@ exports.handler = async function (context, event, callback) {
   }
 
   // Create an access token
+  // Start with a grant that gives access to just the named room.
+  const grant = new VideoGrant({ room: ROOM });
+  // Create an access token using your API credentials. Your Account SID is
+  // available on the Twilio console https://www.twilio.com/console
+  // You can create an API key and secret here: https://www.twilio.com/console/video/project/api-keys
+  // Set the identity for the access token here as well.
+  const accessToken = new AccessToken(
+    context.ACCOUNT_SID,
+    context.API_KEY,
+    context.API_SECRET,
+    { identity }
+  );
+  // Add the grant to the access token.
+  accessToken.addGrant(grant);
 
-  callback(null, { identity, room: ROOM });
+  // Return the access token as part of the response.
+  callback(null, {
+    identity,
+    room: ROOM,
+    token: accessToken.toJwt(),
+  });
 };

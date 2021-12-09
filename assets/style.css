@@ -112,7 +112,7 @@ main form button {
 }
 #participants > div {
   position: relative;
-  height: 180px;
+  /* height: 180px; */
   margin-bottom: 20px;
   margin-right: 20px;
   overflow: hidden;

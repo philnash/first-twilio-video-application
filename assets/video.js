@@ -7,6 +7,9 @@ window.addEventListener("load", () => {
   const usernameSpan = document.getElementById("username");
   const roomSpan = document.getElementById("room");
 
+  const videoButton = document.getElementById("play-video");
+  const videoElement = document.getElementById("big-buck-bunny");
+
   loginForm.addEventListener("submit", (event) => {
     event.preventDefault();
     const identity = identityField.value;
@@ -47,6 +50,28 @@ window.addEventListener("load", () => {
       // Eject the participant from the room if they reload or leave the page
       window.addEventListener("beforeunload", tidyUp(room));
       window.addEventListener("pagehide", tidyUp(room));
+
+      // Show the video and button
+      videoButton.removeAttribute("hidden");
+      videoElement.removeAttribute("hidden");
+      let playing = false;
+      let tracks;
+      videoButton.addEventListener("click", () => {
+        if (!playing) {
+          const mediaStream = videoElement.captureStream();
+          videoElement.play();
+          tracks = mediaStream.getTracks();
+          console.log(tracks);
+          room.localParticipant.publishTracks(tracks);
+          playing = true;
+          videoButton.innerText = "Stop";
+        } else {
+          playing = false;
+          videoElement.pause();
+          room.localParticipant.unpublishTracks(tracks);
+          videoButton.innerText = "Play this video to the room";
+        }
+      });
     });
   }
 
@@ -57,31 +82,34 @@ window.addEventListener("load", () => {
     participants.appendChild(el);
     // Find all the participant's existing tracks and publish them to our page
     participant.tracks.forEach((trackPublication) => {
-      trackPublished(trackPublication, participant);
+      trackPublished(participant)(trackPublication);
     });
     // Listen for the participant publishing new tracks
-    participant.on("trackPublished", trackPublished);
+    participant.on("trackPublished", trackPublished(participant));
   }
 
-  function trackPublished(trackPublication, participant) {
-    // Get the participant's <div> we created earlier
-    const el = document.getElementById(participant.identity);
-    // Find out if the track has been subscribed to and add it to the page or
-    // listen for the subscription, then add it to the page.
+  function trackPublished(participant) {
+    return function (trackPublication) {
+      console.log(trackPublication);
+      // Get the participant's <div> we created earlier
+      const el = document.getElementById(participant.identity);
+      // Find out if the track has been subscribed to and add it to the page or
+      // listen for the subscription, then add it to the page.
 
-    // First create a function that adds the track to the page
-    const trackSubscribed = (track) => {
-      // track.attach() creates the media elements <video> and <audio> to
-      // to display the track on the page.
-      el.appendChild(track.attach());
+      // First create a function that adds the track to the page
+      const trackSubscribed = (track) => {
+        // track.attach() creates the media elements <video> and <audio> to
+        // to display the track on the page.
+        el.appendChild(track.attach());
+      };
+      // If the track is already subscribed, add it immediately to the page
+      if (trackPublication.track) {
+        trackSubscribed(trackPublication.track);
+      }
+      // Otherwise listen for the track to be subscribed to, then add it to the
+      // page
+      trackPublication.on("subscribed", trackSubscribed);
     };
-    // If the track is already subscribed, add it immediately to the page
-    if (trackPublication.track) {
-      trackSubscribed(trackPublication.track);
-    }
-    // Otherwise listen for the track to be subscribed to, then add it to the
-    // page
-    trackPublication.on("subscribed", trackSubscribed);
   }
 
   function participantDisconnected(participant) {
